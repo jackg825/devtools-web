@@ -10,7 +10,7 @@ export default async function QRGeneratorPage({ params }: PageProps) {
   setRequestLocale(locale)
 
   return (
-    <div className="h-[calc(100vh-var(--header-height)-48px)]">
+    <div className="h-[calc(100dvh-56px-48px)]">
       <QRGeneratorClient />
     </div>
   )

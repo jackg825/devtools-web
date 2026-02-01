@@ -18,6 +18,7 @@ import {
   formatCrypto,
   formatTWQR,
 } from '@/lib/qr-formatters'
+import { TAIWAN_BANKS, formatBankOption } from '@/lib/taiwan-banks'
 import type { WiFiData, VCardData, EventData, GeoData, CryptoData, TWQRData, SMSData } from '@/types/qr'
 
 export const QRDataInput = memo(function QRDataInput() {
@@ -530,12 +531,21 @@ const TWQRInput = memo(function TWQRInput() {
     <div className="space-y-3">
       <div className="space-y-2">
         <Label>{t('bankCode')}</Label>
-        <Input
+        <Select
           value={twqrData.bankCode}
-          onChange={(e) => updateField('bankCode', e.target.value)}
-          placeholder="012"
-          maxLength={3}
-        />
+          onValueChange={(value) => updateField('bankCode', value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={t('selectBank')} />
+          </SelectTrigger>
+          <SelectContent className="max-h-[280px]">
+            {TAIWAN_BANKS.map((bank) => (
+              <SelectItem key={bank.code} value={bank.code}>
+                {formatBankOption(bank)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-2">
         <Label>{t('account')}</Label>

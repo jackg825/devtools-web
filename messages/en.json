@@ -71,10 +71,16 @@
       "sms": "SMS",
       "geo": "Location",
       "crypto": "Crypto",
-      "twqr": "Taiwan Pay",
+      "twqr": "TWQR",
       "copy": "Copy Text"
     },
     "controls": {
+      "tabs": {
+        "basic": "Basic",
+        "style": "Style",
+        "corners": "Corners",
+        "logo": "Logo"
+      },
       "type": "Type",
       "size": "Size",
       "color": "Color",
@@ -85,8 +91,15 @@
       "margin": "Margin",
       "dotStyle": "Dot Style",
       "cornerSquareStyle": "Corner Square",
+      "cornerSquareColor": "Corner Square Color",
       "cornerDotStyle": "Corner Dot",
-      "logo": "Logo"
+      "cornerDotColor": "Corner Dot Color",
+      "logo": "Logo",
+      "logoMode": "Logo Mode",
+      "logoSize": "Logo Size",
+      "logoMargin": "Logo Outline",
+      "uploadImage": "Upload Image",
+      "selectIcon": "Select Icon"
     },
     "dotStyles": {
       "square": "Square",
@@ -109,12 +122,23 @@
     "socialIcons": {
       "facebook": "Facebook",
       "instagram": "Instagram",
+      "x": "X (Twitter)",
+      "youtube": "YouTube",
+      "linkedin": "LinkedIn",
       "line": "LINE",
       "telegram": "Telegram",
       "whatsapp": "WhatsApp",
-      "appstore": "App Store",
-      "googleplay": "Google Play",
-      "twqr": "Taiwan Pay"
+      "wechat": "WeChat",
+      "weibo": "Weibo",
+      "tiktok": "TikTok",
+      "discord": "Discord",
+      "slack": "Slack",
+      "reddit": "Reddit",
+      "pinterest": "Pinterest",
+      "github": "GitHub",
+      "medium": "Medium",
+      "google-map": "Google Maps",
+      "twqr": "TWQR"
     },
     "inputs": {
       "url": {
@@ -167,6 +191,7 @@
       },
       "twqr": {
         "bankCode": "Bank Code",
+        "selectBank": "Select Bank",
         "account": "Account",
         "amount": "Amount"
       },
@@ -175,8 +200,16 @@
       }
     },
     "export": {
+      "format": "Format",
+      "size": "Size",
+      "download": "Download",
+      "preview": "Preview",
       "png": "PNG",
       "svg": "SVG",
+      "jpeg": "JPEG",
+      "webp": "WebP",
+      "copy": "Copy",
+      "copied": "Copied!",
       "downloading": "Downloading..."
     }
   }

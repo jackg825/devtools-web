@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { QRLogoPanel } from './QRLogoPanel'
 import {
   useQRType,
   useQRSize,
@@ -117,10 +118,11 @@ export const QRControlPanel = memo(function QRControlPanel() {
 
   return (
     <Tabs defaultValue="basic" className="w-full">
-      <TabsList className="w-full grid grid-cols-3">
-        <TabsTrigger value="basic">Basic</TabsTrigger>
-        <TabsTrigger value="style">Style</TabsTrigger>
-        <TabsTrigger value="corners">Corners</TabsTrigger>
+      <TabsList className="w-full grid grid-cols-4">
+        <TabsTrigger value="basic">{tControls('tabs.basic')}</TabsTrigger>
+        <TabsTrigger value="style">{tControls('tabs.style')}</TabsTrigger>
+        <TabsTrigger value="corners">{tControls('tabs.corners')}</TabsTrigger>
+        <TabsTrigger value="logo">{tControls('tabs.logo')}</TabsTrigger>
       </TabsList>
 
       <TabsContent value="basic" className="space-y-4 mt-4">
@@ -280,7 +282,7 @@ export const QRControlPanel = memo(function QRControlPanel() {
 
         {/* Corner Square Color */}
         <div className="space-y-2">
-          <Label>Corner Square Color</Label>
+          <Label>{tControls('cornerSquareColor')}</Label>
           <div className="flex gap-2">
             <Input
               type="color"
@@ -319,7 +321,7 @@ export const QRControlPanel = memo(function QRControlPanel() {
 
         {/* Corner Dot Color */}
         <div className="space-y-2">
-          <Label>Corner Dot Color</Label>
+          <Label>{tControls('cornerDotColor')}</Label>
           <div className="flex gap-2">
             <Input
               type="color"
@@ -335,6 +337,10 @@ export const QRControlPanel = memo(function QRControlPanel() {
             />
           </div>
         </div>
+      </TabsContent>
+
+      <TabsContent value="logo" className="space-y-4 mt-4">
+        <QRLogoPanel />
       </TabsContent>
     </Tabs>
   )

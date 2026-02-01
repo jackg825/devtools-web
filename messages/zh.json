@@ -71,10 +71,16 @@
       "sms": "簡訊",
       "geo": "地圖",
       "crypto": "加密貨幣",
-      "twqr": "台灣 Pay",
+      "twqr": "TWQR",
       "copy": "掃碼複製"
     },
     "controls": {
+      "tabs": {
+        "basic": "基本",
+        "style": "樣式",
+        "corners": "角落",
+        "logo": "標誌"
+      },
       "type": "類型",
       "size": "尺寸",
       "color": "顏色",
@@ -85,8 +91,15 @@
       "margin": "邊框",
       "dotStyle": "點樣式",
       "cornerSquareStyle": "角落外框",
+      "cornerSquareColor": "角落方塊顏色",
       "cornerDotStyle": "角落內框",
-      "logo": "Logo"
+      "cornerDotColor": "角落圓點顏色",
+      "logo": "Logo",
+      "logoMode": "標誌模式",
+      "logoSize": "標誌大小",
+      "logoMargin": "標誌邊框",
+      "uploadImage": "上傳圖片",
+      "selectIcon": "選擇圖標"
     },
     "dotStyles": {
       "square": "方形",
@@ -109,12 +122,23 @@
     "socialIcons": {
       "facebook": "Facebook",
       "instagram": "Instagram",
+      "x": "X (Twitter)",
+      "youtube": "YouTube",
+      "linkedin": "LinkedIn",
       "line": "LINE",
       "telegram": "Telegram",
       "whatsapp": "WhatsApp",
-      "appstore": "App Store",
-      "googleplay": "Google Play",
-      "twqr": "台灣 Pay"
+      "wechat": "微信",
+      "weibo": "微博",
+      "tiktok": "TikTok",
+      "discord": "Discord",
+      "slack": "Slack",
+      "reddit": "Reddit",
+      "pinterest": "Pinterest",
+      "github": "GitHub",
+      "medium": "Medium",
+      "google-map": "Google 地圖",
+      "twqr": "TWQR"
     },
     "inputs": {
       "url": {
@@ -167,6 +191,7 @@
       },
       "twqr": {
         "bankCode": "銀行代碼",
+        "selectBank": "選擇銀行",
         "account": "帳號",
         "amount": "金額"
       },
@@ -175,8 +200,16 @@
       }
     },
     "export": {
+      "format": "格式",
+      "size": "尺寸",
+      "download": "下載",
+      "preview": "預覽",
       "png": "PNG",
       "svg": "SVG",
+      "jpeg": "JPEG",
+      "webp": "WebP",
+      "copy": "複製",
+      "copied": "已複製!",
       "downloading": "下載中..."
     }
   }

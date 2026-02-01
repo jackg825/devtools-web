@@ -2,7 +2,7 @@
 
 import { memo } from 'react'
 import { Loader2 } from 'lucide-react'
-import { useQRCode } from '@/hooks/useQRCode'
+import { useQRCode, type ExportFormat, type ExportSize } from '@/hooks/useQRCode'
 import type {
   DotStyle,
   CornerSquareStyle,
@@ -26,23 +26,26 @@ interface QRPreviewProps {
   cornerDotColor: string
   logoImage?: string
   logoSize?: number
+  logoMargin?: number
+  onDownload: (download: (format: ExportFormat, size: ExportSize, filename?: string) => Promise<void>) => void
   onDownloadPng: (download: (filename?: string) => Promise<void>) => void
   onDownloadSvg: (download: (filename?: string) => Promise<void>) => void
 }
 
 export const QRPreview = memo(function QRPreview(props: QRPreviewProps) {
-  const { onDownloadPng, onDownloadSvg, ...qrOptions } = props
+  const { onDownload, onDownloadPng, onDownloadSvg, ...qrOptions } = props
 
-  const { containerRef, isLoading, error, downloadPng, downloadSvg } = useQRCode(qrOptions)
+  const { containerRef, isLoading, error, download, downloadPng, downloadSvg } = useQRCode(qrOptions)
 
   // Pass download functions to parent
+  onDownload(download)
   onDownloadPng(downloadPng)
   onDownloadSvg(downloadSvg)
 
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="relative flex items-center justify-center max-w-full">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface)]/80">
+        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface)]/80 z-10">
           <Loader2 className="w-8 h-8 animate-spin text-[var(--accent)]" />
         </div>
       )}
@@ -53,11 +56,7 @@ export const QRPreview = memo(function QRPreview(props: QRPreviewProps) {
       )}
       <div
         ref={containerRef}
-        className="flex items-center justify-center"
-        style={{
-          minWidth: props.size,
-          minHeight: props.size,
-        }}
+        className="flex items-center justify-center [&>canvas]:max-w-full [&>canvas]:h-auto [&>svg]:max-w-full [&>svg]:h-auto"
       />
     </div>
   )
