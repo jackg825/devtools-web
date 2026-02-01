@@ -32,6 +32,7 @@ interface QRGeneratorStore extends QRSettings {
   setLogoMode: (mode: LogoMode) => void
   setLogoImage: (image: string) => void
   setLogoSize: (size: number) => void
+  setLogoMargin: (margin: number) => void
   setSelectedSocialIcon: (icon: SocialIcon | null) => void
   reset: () => void
 }
@@ -39,7 +40,7 @@ interface QRGeneratorStore extends QRSettings {
 const defaultSettings: QRSettings = {
   type: 'url',
   data: 'https://example.com',
-  size: 300,
+  size: 800, // 提高預覽解析度以保持 logo 清晰
   color: '#000000',
   backgroundColor: '#ffffff',
   transparentBackground: false,
@@ -53,7 +54,8 @@ const defaultSettings: QRSettings = {
   cornerDotColor: '#000000',
   logoMode: 'none',
   logoImage: '',
-  logoSize: 20,
+  logoSize: 40,
+  logoMargin: 0,
   selectedSocialIcon: null,
 }
 
@@ -61,7 +63,16 @@ export const useQRGeneratorStore = create<QRGeneratorStore>()(
   persist(
     (set) => ({
       ...defaultSettings,
-      setType: (type) => set({ type, data: '' }),
+      setType: (type) => set({
+        type,
+        data: '',
+        // Auto-apply TWQR logo when selecting TWQR type
+        ...(type === 'twqr' ? {
+          logoMode: 'social' as LogoMode,
+          logoImage: '/icons/social/twqr.png',
+          selectedSocialIcon: null,
+        } : {}),
+      }),
       setData: (data) => set({ data }),
       setSize: (size) => set({ size }),
       setColor: (color) => set({ color }),
@@ -78,6 +89,7 @@ export const useQRGeneratorStore = create<QRGeneratorStore>()(
       setLogoMode: (logoMode) => set({ logoMode, logoImage: '', selectedSocialIcon: null }),
       setLogoImage: (logoImage) => set({ logoImage }),
       setLogoSize: (logoSize) => set({ logoSize }),
+      setLogoMargin: (logoMargin) => set({ logoMargin }),
       setSelectedSocialIcon: (selectedSocialIcon) => set({ selectedSocialIcon }),
       reset: () => set(defaultSettings),
     }),
@@ -97,6 +109,7 @@ export const useQRGeneratorStore = create<QRGeneratorStore>()(
         cornerDotStyle: state.cornerDotStyle,
         cornerDotColor: state.cornerDotColor,
         logoSize: state.logoSize,
+        logoMargin: state.logoMargin,
       }),
     }
   )
@@ -120,6 +133,7 @@ export const useQRCornerDotColor = () => useQRGeneratorStore((s) => s.cornerDotC
 export const useQRLogoMode = () => useQRGeneratorStore((s) => s.logoMode)
 export const useQRLogoImage = () => useQRGeneratorStore((s) => s.logoImage)
 export const useQRLogoSize = () => useQRGeneratorStore((s) => s.logoSize)
+export const useQRLogoMargin = () => useQRGeneratorStore((s) => s.logoMargin)
 export const useQRSelectedSocialIcon = () => useQRGeneratorStore((s) => s.selectedSocialIcon)
 
 // Action Selectors
@@ -140,6 +154,7 @@ export const useSetQRCornerDotColor = () => useQRGeneratorStore((s) => s.setCorn
 export const useSetQRLogoMode = () => useQRGeneratorStore((s) => s.setLogoMode)
 export const useSetQRLogoImage = () => useQRGeneratorStore((s) => s.setLogoImage)
 export const useSetQRLogoSize = () => useQRGeneratorStore((s) => s.setLogoSize)
+export const useSetQRLogoMargin = () => useQRGeneratorStore((s) => s.setLogoMargin)
 export const useSetQRSelectedSocialIcon = () => useQRGeneratorStore((s) => s.setSelectedSocialIcon)
 
 // Grouped Selectors
@@ -162,6 +177,7 @@ export const useQRPreviewSettings = () =>
       logoMode: s.logoMode,
       logoImage: s.logoImage,
       logoSize: s.logoSize,
+      logoMargin: s.logoMargin,
       selectedSocialIcon: s.selectedSocialIcon,
     }))
   )
