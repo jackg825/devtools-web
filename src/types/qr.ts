@@ -6,7 +6,11 @@ export type CornerDotStyle = 'square' | 'dot'
 export type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H'
 
 export type LogoMode = 'none' | 'upload' | 'social'
-export type SocialIcon = 'facebook' | 'instagram' | 'line' | 'telegram' | 'whatsapp' | 'appstore' | 'googleplay' | 'twqr'
+export type SocialIcon =
+  | 'facebook' | 'instagram' | 'x' | 'youtube' | 'linkedin'
+  | 'line' | 'telegram' | 'whatsapp' | 'wechat' | 'weibo'
+  | 'tiktok' | 'discord' | 'slack' | 'reddit' | 'pinterest'
+  | 'github' | 'medium' | 'google-map' | 'twqr'
 
 export interface QRSettings {
   type: QRType
@@ -25,7 +29,8 @@ export interface QRSettings {
   cornerDotColor: string
   logoMode: LogoMode
   logoImage: string // base64 or URL
-  logoSize: number // percentage 0-50
+  logoSize: number // percentage 35-70
+  logoMargin: number // margin around logo in pixels
   selectedSocialIcon: SocialIcon | null
 }
 
