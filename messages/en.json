@@ -1,0 +1,183 @@
+{
+  "common": {
+    "appName": "DevTools",
+    "appDescription": "Developer Tools Collection",
+    "github": "GitHub",
+    "language": "Language"
+  },
+  "nav": {
+    "codeCanvas": "Code Canvas",
+    "codeCanvasDesc": "Code to Image",
+    "qrGenerator": "QR Generator",
+    "qrGeneratorDesc": "QR Code Generator"
+  },
+  "codeCanvas": {
+    "title": "Code Canvas",
+    "description": "Transform your code into beautiful terminal images",
+    "controls": {
+      "language": "Language",
+      "theme": "Theme",
+      "font": "Font",
+      "fontSize": "Font Size",
+      "lineHeight": "Line Height",
+      "padding": "Padding",
+      "borderRadius": "Border Radius",
+      "lineNumbers": "Line Numbers",
+      "windowStyle": "Window Style",
+      "showBackground": "Show Background",
+      "backgroundColor": "Background Color",
+      "shadow": "Shadow",
+      "visualEffect": "Visual Effect",
+      "effectColor": "Effect Color"
+    },
+    "window": {
+      "macos": "macOS",
+      "windows": "Windows",
+      "none": "None"
+    },
+    "shadow": {
+      "none": "None",
+      "light": "Light",
+      "medium": "Medium",
+      "heavy": "Heavy"
+    },
+    "effects": {
+      "none": "None",
+      "neon": "Neon",
+      "holographic": "Holographic",
+      "scanlines": "Scanlines",
+      "cyberpunk": "Cyberpunk",
+      "matrix": "Matrix",
+      "frosted": "Frosted"
+    },
+    "export": {
+      "png": "PNG",
+      "svg": "SVG",
+      "copy": "Copy",
+      "downloading": "Downloading...",
+      "copied": "Copied!"
+    }
+  },
+  "qrGenerator": {
+    "title": "QR Code Generator",
+    "description": "Generate custom styled QR codes",
+    "types": {
+      "url": "URL",
+      "text": "Text",
+      "wifi": "Wi-Fi",
+      "vcard": "vCard",
+      "event": "Event",
+      "tel": "Phone",
+      "sms": "SMS",
+      "geo": "Location",
+      "crypto": "Crypto",
+      "twqr": "Taiwan Pay",
+      "copy": "Copy Text"
+    },
+    "controls": {
+      "type": "Type",
+      "size": "Size",
+      "color": "Color",
+      "backgroundColor": "Background",
+      "transparent": "Transparent",
+      "version": "Version",
+      "errorCorrection": "Error Correction",
+      "margin": "Margin",
+      "dotStyle": "Dot Style",
+      "cornerSquareStyle": "Corner Square",
+      "cornerDotStyle": "Corner Dot",
+      "logo": "Logo"
+    },
+    "dotStyles": {
+      "square": "Square",
+      "rounded": "Rounded",
+      "dots": "Dots",
+      "classy": "Classy",
+      "classyRounded": "Classy Rounded",
+      "extraRounded": "Extra Rounded"
+    },
+    "cornerStyles": {
+      "square": "Square",
+      "dot": "Dot",
+      "extraRounded": "Extra Rounded"
+    },
+    "logoOptions": {
+      "none": "None",
+      "upload": "Upload Image",
+      "social": "Social Icons"
+    },
+    "socialIcons": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "line": "LINE",
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp",
+      "appstore": "App Store",
+      "googleplay": "Google Play",
+      "twqr": "Taiwan Pay"
+    },
+    "inputs": {
+      "url": {
+        "placeholder": "Enter URL..."
+      },
+      "text": {
+        "placeholder": "Enter text content..."
+      },
+      "wifi": {
+        "ssid": "Network Name (SSID)",
+        "password": "Password",
+        "encryption": "Encryption",
+        "hidden": "Hidden Network",
+        "noPassword": "No Password"
+      },
+      "vcard": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "org": "Organization",
+        "title": "Title",
+        "email": "Email",
+        "phone": "Phone",
+        "website": "Website",
+        "address": "Address"
+      },
+      "event": {
+        "title": "Event Title",
+        "location": "Location",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "description": "Description"
+      },
+      "tel": {
+        "phone": "Phone Number"
+      },
+      "sms": {
+        "phone": "Phone Number",
+        "message": "Message"
+      },
+      "geo": {
+        "latitude": "Latitude",
+        "longitude": "Longitude"
+      },
+      "crypto": {
+        "currency": "Currency",
+        "address": "Wallet Address",
+        "amount": "Amount",
+        "label": "Label",
+        "message": "Message"
+      },
+      "twqr": {
+        "bankCode": "Bank Code",
+        "account": "Account",
+        "amount": "Amount"
+      },
+      "copy": {
+        "placeholder": "Enter text to copy..."
+      }
+    },
+    "export": {
+      "png": "PNG",
+      "svg": "SVG",
+      "downloading": "Downloading..."
+    }
+  }
+}

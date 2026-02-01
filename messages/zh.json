@@ -1,0 +1,183 @@
+{
+  "common": {
+    "appName": "DevTools",
+    "appDescription": "開發者工具集合",
+    "github": "GitHub",
+    "language": "語言"
+  },
+  "nav": {
+    "codeCanvas": "Code Canvas",
+    "codeCanvasDesc": "程式碼轉圖片",
+    "qrGenerator": "QR 產生器",
+    "qrGeneratorDesc": "QR Code 生成"
+  },
+  "codeCanvas": {
+    "title": "Code Canvas",
+    "description": "將程式碼轉換為精美的終端機圖片",
+    "controls": {
+      "language": "語言",
+      "theme": "主題",
+      "font": "字體",
+      "fontSize": "字體大小",
+      "lineHeight": "行高",
+      "padding": "內距",
+      "borderRadius": "圓角",
+      "lineNumbers": "顯示行號",
+      "windowStyle": "視窗樣式",
+      "showBackground": "顯示背景",
+      "backgroundColor": "背景顏色",
+      "shadow": "陰影",
+      "visualEffect": "視覺效果",
+      "effectColor": "效果顏色"
+    },
+    "window": {
+      "macos": "macOS",
+      "windows": "Windows",
+      "none": "無"
+    },
+    "shadow": {
+      "none": "無",
+      "light": "輕微",
+      "medium": "中等",
+      "heavy": "濃重"
+    },
+    "effects": {
+      "none": "無",
+      "neon": "霓虹",
+      "holographic": "全息",
+      "scanlines": "掃描線",
+      "cyberpunk": "賽博龐克",
+      "matrix": "駭客",
+      "frosted": "磨砂"
+    },
+    "export": {
+      "png": "PNG",
+      "svg": "SVG",
+      "copy": "複製",
+      "downloading": "下載中...",
+      "copied": "已複製!"
+    }
+  },
+  "qrGenerator": {
+    "title": "QR Code 產生器",
+    "description": "生成自訂樣式的 QR Code",
+    "types": {
+      "url": "網址",
+      "text": "文字",
+      "wifi": "Wi-Fi",
+      "vcard": "名片",
+      "event": "行事曆",
+      "tel": "電話",
+      "sms": "簡訊",
+      "geo": "地圖",
+      "crypto": "加密貨幣",
+      "twqr": "台灣 Pay",
+      "copy": "掃碼複製"
+    },
+    "controls": {
+      "type": "類型",
+      "size": "尺寸",
+      "color": "顏色",
+      "backgroundColor": "背景顏色",
+      "transparent": "透明背景",
+      "version": "密度版本",
+      "errorCorrection": "容錯率",
+      "margin": "邊框",
+      "dotStyle": "點樣式",
+      "cornerSquareStyle": "角落外框",
+      "cornerDotStyle": "角落內框",
+      "logo": "Logo"
+    },
+    "dotStyles": {
+      "square": "方形",
+      "rounded": "圓角",
+      "dots": "圓點",
+      "classy": "優雅",
+      "classyRounded": "優雅圓角",
+      "extraRounded": "超圓角"
+    },
+    "cornerStyles": {
+      "square": "方形",
+      "dot": "圓點",
+      "extraRounded": "超圓角"
+    },
+    "logoOptions": {
+      "none": "無",
+      "upload": "上傳圖片",
+      "social": "社群圖標"
+    },
+    "socialIcons": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "line": "LINE",
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp",
+      "appstore": "App Store",
+      "googleplay": "Google Play",
+      "twqr": "台灣 Pay"
+    },
+    "inputs": {
+      "url": {
+        "placeholder": "輸入網址..."
+      },
+      "text": {
+        "placeholder": "輸入文字內容..."
+      },
+      "wifi": {
+        "ssid": "網路名稱 (SSID)",
+        "password": "密碼",
+        "encryption": "加密方式",
+        "hidden": "隱藏網路",
+        "noPassword": "無密碼"
+      },
+      "vcard": {
+        "firstName": "名字",
+        "lastName": "姓氏",
+        "org": "公司",
+        "title": "職稱",
+        "email": "Email",
+        "phone": "電話",
+        "website": "網站",
+        "address": "地址"
+      },
+      "event": {
+        "title": "活動名稱",
+        "location": "地點",
+        "startDate": "開始日期",
+        "endDate": "結束日期",
+        "description": "描述"
+      },
+      "tel": {
+        "phone": "電話號碼"
+      },
+      "sms": {
+        "phone": "電話號碼",
+        "message": "訊息內容"
+      },
+      "geo": {
+        "latitude": "緯度",
+        "longitude": "經度"
+      },
+      "crypto": {
+        "currency": "幣種",
+        "address": "錢包地址",
+        "amount": "金額",
+        "label": "標籤",
+        "message": "訊息"
+      },
+      "twqr": {
+        "bankCode": "銀行代碼",
+        "account": "帳號",
+        "amount": "金額"
+      },
+      "copy": {
+        "placeholder": "輸入要複製的內容..."
+      }
+    },
+    "export": {
+      "png": "PNG",
+      "svg": "SVG",
+      "downloading": "下載中..."
+    }
+  }
+}

@@ -1,0 +1,219 @@
+/**
+ * Visual Effects for Terminal Preview
+ * All effects are static CSS (no animations) for html-to-image export compatibility
+ */
+
+/* ============================================
+   NEON GLOW EFFECT
+   Bright colored glow around terminal
+   ============================================ */
+.effect-neon {
+  box-shadow:
+    0 0 5px var(--effect-color-60),
+    0 0 20px var(--effect-color-40),
+    0 0 40px var(--effect-color-20),
+    0 0 80px var(--effect-color-20),
+    inset 0 0 20px var(--effect-color-20) !important;
+  border: 1px solid var(--effect-color-60) !important;
+}
+
+/* ============================================
+   HOLOGRAPHIC EFFECT
+   Rainbow/iridescent shimmer border
+   ============================================ */
+.effect-holographic {
+  position: relative;
+  border: 2px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
+.effect-holographic::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--effect-color) 0%,
+    #00ffff 25%,
+    #00ff00 50%,
+    #ffff00 75%,
+    var(--effect-color) 100%
+  );
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.effect-holographic::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ============================================
+   SCANLINES EFFECT
+   CRT-style horizontal lines overlay
+   ============================================ */
+.effect-scanlines {
+  position: relative;
+  box-shadow:
+    0 0 10px var(--effect-color-40),
+    0 0 30px var(--effect-color-20) !important;
+  border: 1px solid var(--effect-color-40) !important;
+}
+
+.effect-scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    var(--effect-color-20) 2px,
+    var(--effect-color-20) 4px
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* ============================================
+   CYBERPUNK EFFECT
+   Corner accents + neon border
+   ============================================ */
+.effect-cyberpunk {
+  position: relative;
+  box-shadow:
+    0 0 10px var(--effect-color-60),
+    0 0 30px var(--effect-color-40),
+    inset 0 0 15px var(--effect-color-20) !important;
+  border: 1px solid var(--effect-color) !important;
+}
+
+.effect-cyberpunk::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 30px;
+  height: 30px;
+  border-top: 3px solid var(--effect-color);
+  border-left: 3px solid var(--effect-color);
+  border-top-left-radius: inherit;
+  filter: drop-shadow(0 0 4px var(--effect-color));
+}
+
+.effect-cyberpunk::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 30px;
+  height: 30px;
+  border-bottom: 3px solid var(--effect-color);
+  border-right: 3px solid var(--effect-color);
+  border-bottom-right-radius: inherit;
+  filter: drop-shadow(0 0 4px var(--effect-color));
+}
+
+/* ============================================
+   MATRIX EFFECT
+   Green tint with digital rain pattern
+   ============================================ */
+.effect-matrix {
+  position: relative;
+  box-shadow:
+    0 0 15px var(--effect-color-40),
+    0 0 40px var(--effect-color-20),
+    inset 0 0 30px var(--effect-color-20) !important;
+  border: 1px solid var(--effect-color-60) !important;
+}
+
+.effect-matrix::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      180deg,
+      var(--effect-color-20) 0%,
+      transparent 30%,
+      transparent 70%,
+      var(--effect-color-20) 100%
+    );
+  pointer-events: none;
+}
+
+.effect-matrix::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 3px,
+      var(--effect-color-20) 3px,
+      var(--effect-color-20) 4px
+    );
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ============================================
+   FROSTED EFFECT
+   Soft blur glow + glass edge
+   ============================================ */
+.effect-frosted {
+  box-shadow:
+    0 4px 30px rgba(255, 255, 255, 0.1),
+    0 0 60px var(--effect-color-20),
+    0 0 100px var(--effect-color-20),
+    inset 0 0 40px rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.effect-frosted::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+/* ============================================
+   ENSURE PSEUDO-ELEMENTS DON'T BREAK LAYOUT
+   ============================================ */
+.effect-holographic,
+.effect-scanlines,
+.effect-cyberpunk,
+.effect-matrix,
+.effect-frosted {
+  overflow: visible;
+}
+
+.effect-holographic > *,
+.effect-scanlines > *,
+.effect-cyberpunk > *,
+.effect-matrix > *,
+.effect-frosted > * {
+  position: relative;
+  z-index: 1;
+}
