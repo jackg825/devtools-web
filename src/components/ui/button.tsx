@@ -18,6 +18,10 @@ const buttonVariants = cva(
           'hover:bg-[var(--muted)] hover:text-[var(--foreground)]',
         link:
           'text-[var(--accent)] underline-offset-4 hover:underline',
+        glass:
+          'bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--glass-border)] shadow-[var(--shadow-glass)] hover:bg-[var(--glass-bg-elevated)] hover:shadow-[var(--shadow-glass-hover)] active:scale-[0.98]',
+        gradient:
+          'bg-gradient-to-r from-[#667eea] via-[#764ba2] to-[#f093fb] text-white shadow-lg hover:shadow-xl hover:brightness-110 active:scale-[0.98]',
       },
       size: {
         default: 'h-10 px-4 py-2',
