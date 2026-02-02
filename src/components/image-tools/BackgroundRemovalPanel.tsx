@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { Sparkles, Info } from 'lucide-react'
+import { Sparkles, Info, Check, Loader2 } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
@@ -11,6 +11,7 @@ import {
   useSetRemoveBackground,
   useSetBgRemovalModel,
 } from '@/stores/imageToolsStore'
+import { useBackgroundRemoval } from '@/hooks/useBackgroundRemoval'
 import type { BackgroundRemovalModel } from '@/types/imageTools'
 
 const models: { value: BackgroundRemovalModel; labelKey: string; desc: string }[] = [
@@ -26,6 +27,7 @@ export function BackgroundRemovalPanel() {
   const bgRemovalModel = useBgRemovalModel()
   const setRemoveBackground = useSetRemoveBackground()
   const setBgRemovalModel = useSetBgRemovalModel()
+  const { isModelLoaded } = useBackgroundRemoval()
 
   return (
     <div className="space-y-4">
@@ -71,10 +73,26 @@ export function BackgroundRemovalPanel() {
         </div>
       )}
 
-      {/* Info Note */}
-      <div className="flex items-start gap-2 p-3 bg-[var(--muted)] rounded-lg">
-        <Info className="w-4 h-4 text-[var(--muted-foreground)] mt-0.5 flex-shrink-0" />
-        <p className="text-xs text-[var(--muted-foreground)]">{t('note')}</p>
+      {/* Model Status */}
+      <div
+        className={cn(
+          'flex items-start gap-2 p-3 rounded-lg',
+          isModelLoaded ? 'bg-green-500/10' : 'bg-[var(--muted)]'
+        )}
+      >
+        {isModelLoaded ? (
+          <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+        ) : (
+          <Loader2 className="w-4 h-4 text-[var(--muted-foreground)] mt-0.5 flex-shrink-0 animate-spin" />
+        )}
+        <p
+          className={cn(
+            'text-xs',
+            isModelLoaded ? 'text-green-600 dark:text-green-400' : 'text-[var(--muted-foreground)]'
+          )}
+        >
+          {isModelLoaded ? t('modelReady') : t('note')}
+        </p>
       </div>
     </div>
   )

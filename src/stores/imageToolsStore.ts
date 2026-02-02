@@ -105,10 +105,10 @@ export const useImageToolsStore = create<ImageToolsStore>()(
         set({ isProcessing, processingStep: step, processingProgress: progress }),
 
       setProcessedImage: (image) =>
-        set({ processedImage: image, isProcessing: false, processingStep: null }),
+        set({ processedImage: image, isProcessing: false, processingStep: null, processingProgress: 0 }),
 
       setError: (error) =>
-        set({ error, isProcessing: false, processingStep: null }),
+        set({ error, isProcessing: false, processingStep: null, processingProgress: 0 }),
 
       reset: () => set(defaultSettings),
 

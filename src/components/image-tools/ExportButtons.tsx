@@ -61,7 +61,7 @@ export function ExportButtons() {
   const processImage = useCallback(async () => {
     if (!sourceImage) return
 
-    setProcessingState(true, 'Starting...', 0)
+    setProcessingState(true, t('processing'), 0)
     setError(null)
 
     try {
@@ -73,7 +73,7 @@ export function ExportButtons() {
           model: bgRemovalModel,
           onProgress: (progress, message) => {
             const totalProgress = progress * 0.8
-            setProcessingState(true, message || 'Removing background...', totalProgress)
+            setProcessingState(true, message || t('processingImage'), totalProgress)
           },
         })
       }
@@ -81,7 +81,7 @@ export function ExportButtons() {
       // Step 2: Resize (if needed)
       const needsResize = targetWidth !== originalWidth || targetHeight !== originalHeight
       if (needsResize) {
-        setProcessingState(true, 'Resizing...', removeBackground ? 85 : 50)
+        setProcessingState(true, t('resizing'), removeBackground ? 85 : 50)
         currentImage = await resize(currentImage, {
           width: targetWidth,
           height: targetHeight,
@@ -89,8 +89,14 @@ export function ExportButtons() {
       }
 
       // Step 3: Format conversion
-      setProcessingState(true, 'Converting format...', 95)
+      setProcessingState(true, t('converting'), 95)
       currentImage = await convertFormat(currentImage, outputFormat, quality)
+
+      // Complete
+      setProcessingState(true, t('processing'), 100)
+
+      // Brief delay to show 100% completion
+      await new Promise((resolve) => setTimeout(resolve, 300))
 
       setProcessedImage(currentImage)
     } catch (error) {
@@ -149,12 +155,17 @@ export function ExportButtons() {
       {/* Process Button (if needed) */}
       {needsProcessing && (
         isProcessing ? (
-          <div className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>{processingStep || t('processing')}</span>
+          <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--accent)] text-white rounded-lg relative overflow-hidden">
+            <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            <span className="font-medium">{processingStep || t('processing')}</span>
             {processingProgress > 0 && (
-              <span className="text-white/80">({Math.round(processingProgress)}%)</span>
+              <span className="text-white/80 tabular-nums">({Math.round(processingProgress)}%)</span>
             )}
+            {/* Background progress indicator */}
+            <div
+              className="absolute inset-0 bg-white/10 transition-transform duration-500 ease-out origin-left"
+              style={{ transform: `scaleX(${processingProgress / 100})` }}
+            />
           </div>
         ) : (
           <Button onClick={processImage} className="w-full" variant="default">
@@ -190,11 +201,11 @@ export function ExportButtons() {
       </div>
 
       {/* Processing Progress */}
-      {isProcessing && processingProgress > 0 && (
-        <div className="w-full bg-[var(--muted)] rounded-full h-1.5 overflow-hidden">
+      {isProcessing && (
+        <div className="w-full bg-[var(--muted)] rounded-full h-2 overflow-hidden">
           <div
-            className="h-full bg-[var(--accent)] transition-all duration-300"
-            style={{ width: `${processingProgress}%` }}
+            className="h-full bg-[var(--accent)] transition-all duration-500 ease-out"
+            style={{ width: `${Math.max(processingProgress, 2)}%` }}
           />
         </div>
       )}

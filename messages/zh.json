@@ -257,7 +257,8 @@
         "fast": "快速",
         "fastest": "最快",
         "processing": "去背處理中...",
-        "note": "AI 模型已在背景下載中（約 5MB）"
+        "note": "首次使用需下載 AI 模型（約 5MB）",
+        "modelReady": "AI 模型已就緒"
       }
     },
     "preview": {

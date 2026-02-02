@@ -257,7 +257,8 @@
         "fast": "Fast",
         "fastest": "Fastest",
         "processing": "Removing background...",
-        "note": "AI model is downloading in background (~5MB)"
+        "note": "First use requires downloading AI model (~5MB)",
+        "modelReady": "AI model is ready"
       }
     },
     "preview": {
