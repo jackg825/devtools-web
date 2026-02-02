@@ -86,8 +86,22 @@ export function formatCrypto(data: CryptoData): string {
 }
 
 export function formatTWQR(data: TWQRData): string {
-  // TWQR format based on Taiwan QR Code Payment Standard
-  // This is a simplified version - real implementation may need more fields
+  // TWQR format based on FISC QR Code Common Payment Standard
+  // Reference: https://www.fisc.com.tw/ and PTT MobilePay discussions
   const { bankCode, account, amount } = data
-  return `TWQR://PAY?bankcode=${bankCode}&account=${account}&amount=${amount}`
+
+  // Pad account to 16 digits with leading zeros
+  const paddedAccount = account.padStart(16, '0')
+
+  // Build parameters: D5=BankCode, D6=Account(16 digits), D10=Currency(901=TWD)
+  let params = `D5=${bankCode}&D6=${paddedAccount}&D10=901`
+
+  // If amount is provided, add D1 parameter (amount × 100 for 2 decimal places)
+  if (amount && parseFloat(amount) > 0) {
+    const formattedAmount = Math.round(parseFloat(amount) * 100).toString()
+    params = `D1=${formattedAmount}&${params}`
+  }
+
+  // Format: TWQRP://NTTransfer/[CountryCode=158]/[TransactionType=02]/V1?[params]
+  return `TWQRP://NTTransfer/158/02/V1?${params}`
 }
