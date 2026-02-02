@@ -83,10 +83,10 @@ export function useBackgroundRemoval() {
     abortControllerRef.current?.abort()
   }, [])
 
-  const preloadModel = useCallback(async () => {
+  const preloadModel = useCallback(async (model: BackgroundRemovalModel = 'isnet') => {
     try {
       const { preload } = await import('@imgly/background-removal')
-      await preload({ model: 'isnet', device: 'cpu' })
+      await preload({ model, device: 'cpu' })
       setIsModelLoaded(true)
     } catch {
       // Preload is optional, ignore errors

@@ -1,9 +1,8 @@
 'use client'
 
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale } from 'next-intl'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { routing, type Locale } from '@/i18n/routing'
-import { Globe } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const localeNames: Record<Locale, string> = {
@@ -12,7 +11,6 @@ const localeNames: Record<Locale, string> = {
 }
 
 export function LocaleSwitcher() {
-  const t = useTranslations('common')
   const locale = useLocale() as Locale
   const router = useRouter()
   const pathname = usePathname()

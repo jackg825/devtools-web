@@ -5,7 +5,7 @@ import { ImageDropzone } from './ImageDropzone'
 import { ImagePreview } from './ImagePreview'
 import { ControlPanel } from './ControlPanel'
 import { ExportButtons } from './ExportButtons'
-import { useImageToolsStore, useSourceImage, useImageError, useClearImage } from '@/stores/imageToolsStore'
+import { useImageToolsStore, useSourceImage, useImageError, useClearImage, useBgRemovalModel } from '@/stores/imageToolsStore'
 import { useBackgroundRemoval } from '@/hooks/useBackgroundRemoval'
 import { useTranslations } from 'next-intl'
 import { AlertCircle, X } from 'lucide-react'
@@ -15,6 +15,7 @@ export function ImageToolsClient() {
   const sourceImage = useSourceImage()
   const error = useImageError()
   const clearImage = useClearImage()
+  const bgRemovalModel = useBgRemovalModel()
   const { preloadModel } = useBackgroundRemoval()
 
   // Rehydrate store on client
@@ -22,10 +23,10 @@ export function ImageToolsClient() {
     useImageToolsStore.persist.rehydrate()
   }, [])
 
-  // Preload AI model when page loads
+  // Preload AI model based on user's preferred model
   useEffect(() => {
-    preloadModel()
-  }, [preloadModel])
+    preloadModel(bgRemovalModel)
+  }, [preloadModel, bgRemovalModel])
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 h-full">

@@ -25,6 +25,7 @@ import {
 } from '@/stores/imageToolsStore'
 import { useImageResize } from '@/hooks/useImageResize'
 import { useBackgroundRemoval } from '@/hooks/useBackgroundRemoval'
+import { useSmoothedProgress } from '@/hooks/useSmoothedProgress'
 import { convertFormat, downloadImage, copyImageToClipboard } from '@/utils/imageUtils'
 
 export function ExportButtons() {
@@ -45,6 +46,7 @@ export function ExportButtons() {
   const isProcessing = useIsProcessing()
   const processingStep = useProcessingStep()
   const processingProgress = useProcessingProgress()
+  const smoothedProgress = useSmoothedProgress(processingProgress)
 
   const setProcessingState = useSetProcessingState()
   const setProcessedImage = useSetProcessedImage()
@@ -99,8 +101,7 @@ export function ExportButtons() {
       await new Promise((resolve) => setTimeout(resolve, 300))
 
       setProcessedImage(currentImage)
-    } catch (error) {
-      // Silent fail, error state is set
+    } catch {
       setError('processingFailed')
       setProcessingState(false, null, 0)
     }
@@ -119,6 +120,7 @@ export function ExportButtons() {
     setProcessingState,
     setProcessedImage,
     setError,
+    t,
   ])
 
   const handleDownload = useCallback(async () => {
@@ -158,13 +160,13 @@ export function ExportButtons() {
           <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--accent)] text-white rounded-lg relative overflow-hidden">
             <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
             <span className="font-medium">{processingStep || t('processing')}</span>
-            {processingProgress > 0 && (
-              <span className="text-white/80 tabular-nums">({Math.round(processingProgress)}%)</span>
+            {smoothedProgress > 0 && (
+              <span className="text-white/80 tabular-nums">({Math.round(smoothedProgress)}%)</span>
             )}
-            {/* Background progress indicator */}
+            {/* Background progress indicator - uses smoothed progress for fluid animation */}
             <div
-              className="absolute inset-0 bg-white/10 transition-transform duration-500 ease-out origin-left"
-              style={{ transform: `scaleX(${processingProgress / 100})` }}
+              className="absolute inset-0 bg-white/10 origin-left"
+              style={{ transform: `scaleX(${smoothedProgress / 100})` }}
             />
           </div>
         ) : (
@@ -200,12 +202,12 @@ export function ExportButtons() {
         </Button>
       </div>
 
-      {/* Processing Progress */}
+      {/* Processing Progress - uses smoothed progress for fluid animation */}
       {isProcessing && (
         <div className="w-full bg-[var(--muted)] rounded-full h-2 overflow-hidden">
           <div
-            className="h-full bg-[var(--accent)] transition-all duration-500 ease-out"
-            style={{ width: `${Math.max(processingProgress, 2)}%` }}
+            className="h-full bg-[var(--accent)]"
+            style={{ width: `${Math.max(smoothedProgress, 2)}%` }}
           />
         </div>
       )}

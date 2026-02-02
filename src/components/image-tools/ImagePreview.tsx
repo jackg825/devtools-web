@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider'
 import { cn } from '@/lib/utils'
@@ -17,8 +17,7 @@ type ViewMode = 'original' | 'processed' | 'compare'
 
 export function ImagePreview() {
   const t = useTranslations('imageTools')
-  const [viewMode, setViewMode] = useState<ViewMode>('original')
-  const prevProcessedRef = useRef<string | null>(null)
+  const [userViewMode, setUserViewMode] = useState<ViewMode | null>(null)
 
   const sourceImage = useSourceImage()
   const processedImage = useProcessedImage()
@@ -29,13 +28,12 @@ export function ImagePreview() {
 
   const hasProcessed = !!processedImage
 
-  // Auto-switch to processed view when processing completes
-  useEffect(() => {
-    if (processedImage && !prevProcessedRef.current) {
-      setViewMode('processed')
-    }
-    prevProcessedRef.current = processedImage
-  }, [processedImage])
+  // Derive effective view mode: show processed by default when available, unless user selected otherwise
+  const viewMode: ViewMode = userViewMode ?? (hasProcessed ? 'processed' : 'original')
+
+  const handleSetViewMode = (mode: ViewMode) => {
+    setUserViewMode(mode)
+  }
 
   if (!sourceImage) {
     return null
@@ -46,7 +44,7 @@ export function ImagePreview() {
       {/* View Mode Tabs */}
       <div className="flex gap-1 p-1 bg-[var(--muted)] rounded-lg mb-4 w-fit">
         <button
-          onClick={() => setViewMode('original')}
+          onClick={() => handleSetViewMode('original')}
           className={cn(
             'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
             viewMode === 'original'
@@ -57,7 +55,7 @@ export function ImagePreview() {
           {t('preview.original')}
         </button>
         <button
-          onClick={() => setViewMode('processed')}
+          onClick={() => handleSetViewMode('processed')}
           disabled={!hasProcessed}
           className={cn(
             'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
@@ -70,7 +68,7 @@ export function ImagePreview() {
           {t('preview.processed')}
         </button>
         <button
-          onClick={() => setViewMode('compare')}
+          onClick={() => handleSetViewMode('compare')}
           disabled={!hasProcessed}
           className={cn(
             'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
