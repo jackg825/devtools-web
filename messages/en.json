@@ -192,6 +192,8 @@
       "twqr": {
         "bankCode": "Bank Code",
         "selectBank": "Select Bank",
+        "searchBank": "Search bank code or name...",
+        "noBank": "No matching bank found",
         "account": "Account",
         "amount": "Amount"
       },

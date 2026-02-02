@@ -192,6 +192,8 @@
       "twqr": {
         "bankCode": "銀行代碼",
         "selectBank": "選擇銀行",
+        "searchBank": "搜尋銀行代碼或名稱...",
+        "noBank": "找不到符合的銀行",
         "account": "帳號",
         "amount": "金額"
       },

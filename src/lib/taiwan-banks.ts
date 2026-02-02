@@ -58,7 +58,12 @@ export function getBankByCode(code: string): TaiwanBank | undefined {
   return TAIWAN_BANKS.find(bank => bank.code === code)
 }
 
-// Format bank option for display
+// Format bank option for display (short version)
 export function formatBankOption(bank: TaiwanBank): string {
   return `${bank.code} ${bank.shortName}`
+}
+
+// Format bank display for combobox (full name)
+export function formatBankDisplay(bank: TaiwanBank): string {
+  return `${bank.code} ${bank.name}`
 }

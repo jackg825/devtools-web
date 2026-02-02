@@ -18,7 +18,12 @@ import {
   formatCrypto,
   formatTWQR,
 } from '@/lib/qr-formatters'
-import { TAIWAN_BANKS, formatBankOption } from '@/lib/taiwan-banks'
+import { TAIWAN_BANKS, formatBankDisplay, getBankByCode } from '@/lib/taiwan-banks'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import type { WiFiData, VCardData, EventData, GeoData, CryptoData, TWQRData, SMSData } from '@/types/qr'
 
 export const QRDataInput = memo(function QRDataInput() {
@@ -511,6 +516,7 @@ const CryptoInput = memo(function CryptoInput() {
 const TWQRInput = memo(function TWQRInput() {
   const t = useTranslations('qrGenerator.inputs.twqr')
   const setData = useSetQRData()
+  const [open, setOpen] = useState(false)
   const [twqrData, setTwqrData] = useState<TWQRData>({
     bankCode: '',
     account: '',
@@ -527,25 +533,63 @@ const TWQRInput = memo(function TWQRInput() {
     }
   }, [twqrData, setData])
 
+  const selectedBank = twqrData.bankCode ? getBankByCode(twqrData.bankCode) : null
+
   return (
     <div className="space-y-3">
       <div className="space-y-2">
         <Label>{t('bankCode')}</Label>
-        <Select
-          value={twqrData.bankCode}
-          onValueChange={(value) => updateField('bankCode', value)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t('selectBank')} />
-          </SelectTrigger>
-          <SelectContent className="max-h-[280px]">
-            {TAIWAN_BANKS.map((bank) => (
-              <SelectItem key={bank.code} value={bank.code}>
-                {formatBankOption(bank)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-full justify-between font-normal"
+            >
+              {selectedBank ? formatBankDisplay(selectedBank) : t('selectBank')}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+            <Command
+              filter={(value, search) => {
+                const bank = TAIWAN_BANKS.find(b => b.code === value)
+                if (!bank) return 0
+                const searchLower = search.toLowerCase()
+                if (bank.code.includes(searchLower) || bank.name.toLowerCase().includes(searchLower)) {
+                  return 1
+                }
+                return 0
+              }}
+            >
+              <CommandInput placeholder={t('searchBank')} />
+              <CommandList>
+                <CommandEmpty>{t('noBank')}</CommandEmpty>
+                <CommandGroup>
+                  {TAIWAN_BANKS.map((bank) => (
+                    <CommandItem
+                      key={bank.code}
+                      value={bank.code}
+                      onSelect={(value) => {
+                        updateField('bankCode', value)
+                        setOpen(false)
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          twqrData.bankCode === bank.code ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {formatBankDisplay(bank)}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="space-y-2">
         <Label>{t('account')}</Label>
