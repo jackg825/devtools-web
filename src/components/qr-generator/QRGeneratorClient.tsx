@@ -59,7 +59,7 @@ export function QRGeneratorClient() {
       {/* Preview Area */}
       <div className="flex-1 flex flex-col order-1 lg:order-1">
         {/* QR Preview */}
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-[var(--muted)] rounded-xl overflow-hidden relative min-h-[280px] sm:min-h-[300px]">
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-[var(--muted)] rounded-xl overflow-hidden relative min-h-[280px] sm:min-h-[300px] max-h-[50vh] lg:max-h-[60vh]">
           <div
             className="absolute inset-0 opacity-30 pointer-events-none"
             style={{
@@ -69,7 +69,7 @@ export function QRGeneratorClient() {
           />
           <div
             className={cn(
-              'relative z-10 p-3 sm:p-4 rounded-lg shadow-lg max-w-full',
+              'relative z-10 p-3 sm:p-4 rounded-lg shadow-lg max-w-full max-h-full',
               !settings.transparentBackground && 'bg-white'
             )}
             style={settings.transparentBackground ? {

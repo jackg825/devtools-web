@@ -56,7 +56,7 @@ export const QRPreview = memo(function QRPreview(props: QRPreviewProps) {
       )}
       <div
         ref={containerRef}
-        className="flex items-center justify-center [&>canvas]:max-w-full [&>canvas]:h-auto [&>svg]:max-w-full [&>svg]:h-auto"
+        className="flex items-center justify-center aspect-square [&>canvas]:max-w-full [&>canvas]:max-h-[45vh] [&>canvas]:w-auto [&>canvas]:h-auto [&>svg]:max-w-full [&>svg]:max-h-[45vh] [&>svg]:w-auto [&>svg]:h-auto"
       />
     </div>
   )

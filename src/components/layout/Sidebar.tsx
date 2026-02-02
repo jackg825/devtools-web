@@ -1,12 +1,12 @@
 'use client'
 
-import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { usePathname } from '@/i18n/navigation'
 import { Link } from '@/i18n/navigation'
 import { Code2, QrCode } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSidebar } from '@/components/providers/SidebarProvider'
+import { AppLogo } from '@/components/icons/AppLogo'
 
 const tools = [
   {
@@ -52,13 +52,7 @@ export function Sidebar() {
         {/* Logo */}
         <div className="h-[var(--header-height)] flex items-center px-5 border-b border-[var(--border)]">
           <Link href="/code-canvas" className="flex items-center gap-2.5 group" onClick={close}>
-            <Image
-              src="/icons/icon-192.svg"
-              alt="DevTools"
-              width={32}
-              height={32}
-              className="rounded-lg"
-            />
+            <AppLogo size={32} className="rounded-lg" />
             <span className="font-semibold text-[15px] text-[var(--foreground)]">
               {tCommon('appName')}
             </span>
@@ -100,7 +94,7 @@ export function Sidebar() {
         {/* Footer */}
         <div className="p-3 border-t border-[var(--border)]">
           <a
-            href="https://github.com/anthropics/devtools"
+            href="https://github.com/jackg825/devtools-web"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-2 text-[13px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-lg hover:bg-[var(--muted)] transition-colors"
