@@ -13,34 +13,34 @@ export const EFFECT_PRESETS: Record<VisualEffect, EffectPreset> = {
     description: 'No visual effect',
   },
   neon: {
-    color: '#00ffff',
+    color: '#5FAFAF',
     label: 'Neon Glow',
-    description: 'Bright cyberpunk glow',
+    description: 'Morandi teal cyberpunk glow',
   },
   holographic: {
-    color: '#ff00ff',
+    color: '#A8927F',
     label: 'Holographic',
-    description: 'Iridescent shimmer border',
+    description: 'Warm morandi shimmer border',
   },
   scanlines: {
-    color: '#00ff00',
+    color: '#7FA897',
     label: 'Scanlines',
     description: 'Retro CRT effect',
   },
   cyberpunk: {
-    color: '#ff0080',
+    color: '#4A9A9A',
     label: 'Cyberpunk',
-    description: 'Neon borders with corner accents',
+    description: 'Teal borders with corner accents',
   },
   matrix: {
-    color: '#00ff41',
+    color: '#6B8B7A',
     label: 'Matrix',
-    description: 'Digital rain aesthetic',
+    description: 'Morandi sage digital aesthetic',
   },
   frosted: {
-    color: '#ffffff',
+    color: '#E4E6EB',
     label: 'Frosted',
-    description: 'Soft glass glow',
+    description: 'Soft cold-gray glass glow',
   },
 }
 

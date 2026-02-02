@@ -9,6 +9,18 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        morandi: {
+          teal: '#4A9A9A',
+          'teal-light': '#5FAFAF',
+          'teal-dark': '#3D8585',
+          gray: '#7D8590',
+          warm: '#8B7A6B',
+          sage: '#6B8B7A',
+          rose: '#A87070',
+          gold: '#B8A070',
+        },
+      },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'SF Mono', 'monospace'],
