@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { usePathname } from '@/i18n/navigation'
 import { Link } from '@/i18n/navigation'
-import { Code2, QrCode } from 'lucide-react'
+import { Code2, QrCode, Image } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSidebar } from '@/components/providers/SidebarProvider'
 import { AppLogo } from '@/components/icons/AppLogo'
@@ -22,6 +22,13 @@ const tools = [
     icon: QrCode,
     labelKey: 'qrGenerator',
     descKey: 'qrGeneratorDesc',
+  },
+  {
+    id: 'image-tools',
+    href: '/image-tools',
+    icon: Image,
+    labelKey: 'imageTools',
+    descKey: 'imageToolsDesc',
   },
 ] as const
 

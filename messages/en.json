@@ -9,7 +9,9 @@
     "codeCanvas": "Code Canvas",
     "codeCanvasDesc": "Code to Image",
     "qrGenerator": "QR Generator",
-    "qrGeneratorDesc": "QR Code Generator"
+    "qrGeneratorDesc": "QR Code Generator",
+    "imageTools": "Image Tools",
+    "imageToolsDesc": "Convert, Resize, Remove BG"
   },
   "codeCanvas": {
     "title": "Code Canvas",
@@ -213,6 +215,77 @@
       "copy": "Copy",
       "copied": "Copied!",
       "downloading": "Downloading..."
+    }
+  },
+  "imageTools": {
+    "title": "Image Tools",
+    "description": "Convert, resize, remove background",
+    "dropzone": {
+      "title": "Drop image here",
+      "subtitle": "or click to select file",
+      "formats": "Supports PNG, JPEG, WebP, GIF",
+      "maxSize": "Max 10MB"
+    },
+    "controls": {
+      "tabs": {
+        "format": "Format",
+        "resize": "Resize",
+        "background": "Background"
+      },
+      "format": {
+        "title": "Output Format",
+        "png": "PNG",
+        "jpeg": "JPEG",
+        "webp": "WebP",
+        "quality": "Quality"
+      },
+      "resize": {
+        "title": "Resize",
+        "width": "Width",
+        "height": "Height",
+        "maintainRatio": "Maintain ratio",
+        "mode": "Mode",
+        "pixels": "Pixels",
+        "percentage": "Percentage",
+        "original": "Original size"
+      },
+      "background": {
+        "title": "Background Removal",
+        "enable": "Enable removal",
+        "model": "Model quality",
+        "standard": "Standard (Recommended)",
+        "fast": "Fast",
+        "fastest": "Fastest",
+        "processing": "Removing background...",
+        "note": "AI model is downloading in background (~5MB)"
+      }
+    },
+    "preview": {
+      "original": "Original",
+      "processed": "Processed",
+      "compare": "Compare",
+      "noImage": "No image uploaded",
+      "dimensions": "{width} × {height}",
+      "fileSize": "File size"
+    },
+    "export": {
+      "download": "Download",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "downloading": "Downloading...",
+      "process": "Process Image",
+      "processing": "Processing...",
+      "loadingLibrary": "Loading library...",
+      "downloadingModel": "Downloading model...",
+      "processingImage": "Processing image...",
+      "resizing": "Resizing...",
+      "converting": "Converting format..."
+    },
+    "errors": {
+      "invalidFormat": "Unsupported file format",
+      "fileTooLarge": "File too large, max 10MB",
+      "processingFailed": "Processing failed, please retry",
+      "browserNotSupported": "Your browser does not support this feature"
     }
   }
 }
