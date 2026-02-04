@@ -8,49 +8,157 @@ import type {
   SMSData,
 } from '@/types/qr'
 
+// ============================================================================
+// Helper Functions for RFC Compliance
+// ============================================================================
+
+/**
+ * Escapes special characters for WiFi QR codes (de-facto standard)
+ * Characters that need escaping: backslash, semicolon, colon, comma
+ */
+function escapeWiFiValue(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/:/g, '\\:')
+    .replace(/,/g, '\\,')
+}
+
+/**
+ * Escapes special characters for vCard (RFC 2426)
+ * Characters that need escaping: backslash, semicolon, comma, newline
+ */
+function escapeVCardValue(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\n/g, '\\n')
+}
+
+/**
+ * Escapes special characters for iCalendar (RFC 5545)
+ * Characters that need escaping: backslash, semicolon, comma, newline
+ */
+function escapeICalValue(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\n/g, '\\n')
+}
+
+/**
+ * Folds long lines according to RFC 5545 (max 75 octets per line)
+ * Continuation lines start with a space or tab
+ */
+function foldLine(line: string, maxLength = 75): string {
+  if (line.length <= maxLength) return line
+
+  const result: string[] = []
+  let remaining = line
+
+  // First line can be full length
+  result.push(remaining.slice(0, maxLength))
+  remaining = remaining.slice(maxLength)
+
+  // Continuation lines start with space, so max content is maxLength - 1
+  while (remaining.length > 0) {
+    result.push(' ' + remaining.slice(0, maxLength - 1))
+    remaining = remaining.slice(maxLength - 1)
+  }
+
+  return result.join('\r\n')
+}
+
+/**
+ * Generates a unique identifier for iCalendar events (RFC 5545)
+ */
+function generateUID(): string {
+  const timestamp = Date.now()
+  const random = Math.random().toString(36).substring(2, 15)
+  return `${timestamp}-${random}@devtools-qr`
+}
+
+/**
+ * Gets current timestamp in iCalendar format (DTSTAMP)
+ */
+function getCurrentDTSTAMP(): string {
+  return new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+}
+
+// ============================================================================
+// QR Code Formatters
+// ============================================================================
+
 export function formatWiFi(data: WiFiData): string {
   const { ssid, password, encryption, hidden } = data
-  return `WIFI:T:${encryption};S:${ssid};P:${password};H:${hidden ? 'true' : ''};;`
+  const escapedSSID = escapeWiFiValue(ssid)
+  const escapedPassword = escapeWiFiValue(password)
+  return `WIFI:T:${encryption};S:${escapedSSID};P:${escapedPassword};H:${hidden ? 'true' : ''};;`
 }
 
 export function formatVCard(data: VCardData): string {
+  const escapedFirstName = escapeVCardValue(data.firstName)
+  const escapedLastName = escapeVCardValue(data.lastName)
+
   const lines = [
     'BEGIN:VCARD',
     'VERSION:3.0',
-    `N:${data.lastName};${data.firstName};;;`,
-    `FN:${data.firstName} ${data.lastName}`,
+    foldLine(`N:${escapedLastName};${escapedFirstName};;;`),
+    foldLine(`FN:${escapedFirstName} ${escapedLastName}`),
   ]
 
-  if (data.org) lines.push(`ORG:${data.org}`)
-  if (data.title) lines.push(`TITLE:${data.title}`)
-  if (data.email) lines.push(`EMAIL:${data.email}`)
-  if (data.phone) lines.push(`TEL:${data.phone}`)
-  if (data.website) lines.push(`URL:${data.website}`)
-  if (data.address) lines.push(`ADR:;;${data.address};;;;`)
+  if (data.org) lines.push(foldLine(`ORG:${escapeVCardValue(data.org)}`))
+  if (data.title) lines.push(foldLine(`TITLE:${escapeVCardValue(data.title)}`))
+  if (data.email) lines.push(foldLine(`EMAIL:${data.email}`))
+  if (data.phone) lines.push(foldLine(`TEL:${data.phone}`))
+  if (data.website) lines.push(foldLine(`URL:${data.website}`))
+  if (data.address) lines.push(foldLine(`ADR:;;${escapeVCardValue(data.address)};;;;`))
 
   lines.push('END:VCARD')
-  return lines.join('\n')
+  return lines.join('\r\n')
 }
 
 export function formatEvent(data: EventData): string {
-  const formatDate = (dateStr: string) => {
+  const formatDateTime = (dateStr: string): string => {
     if (!dateStr) return ''
     const date = new Date(dateStr)
     return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
   }
 
+  const uid = generateUID()
+  const dtstamp = getCurrentDTSTAMP()
+
   const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//DevTools//QR Generator//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
     'BEGIN:VEVENT',
-    `SUMMARY:${data.title}`,
+    foldLine(`UID:${uid}`),
+    foldLine(`DTSTAMP:${dtstamp}`),
+    foldLine(`SUMMARY:${escapeICalValue(data.title)}`),
   ]
 
-  if (data.location) lines.push(`LOCATION:${data.location}`)
-  if (data.startDate) lines.push(`DTSTART:${formatDate(data.startDate)}`)
-  if (data.endDate) lines.push(`DTEND:${formatDate(data.endDate)}`)
-  if (data.description) lines.push(`DESCRIPTION:${data.description}`)
+  if (data.location) {
+    lines.push(foldLine(`LOCATION:${escapeICalValue(data.location)}`))
+  }
+  if (data.startDate) {
+    lines.push(foldLine(`DTSTART:${formatDateTime(data.startDate)}`))
+  }
+  if (data.endDate) {
+    lines.push(foldLine(`DTEND:${formatDateTime(data.endDate)}`))
+  }
+  if (data.description) {
+    lines.push(foldLine(`DESCRIPTION:${escapeICalValue(data.description)}`))
+  }
 
   lines.push('END:VEVENT')
-  return lines.join('\n')
+  lines.push('END:VCALENDAR')
+
+  return lines.join('\r\n')
 }
 
 export function formatTel(phone: string): string {

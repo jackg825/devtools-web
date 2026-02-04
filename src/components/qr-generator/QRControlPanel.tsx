@@ -1,11 +1,12 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useState, useCallback, useId } from 'react'
 import { useTranslations } from 'next-intl'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Slider } from '@/components/ui/slider'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Select,
@@ -14,9 +15,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { QRLogoPanel } from './QRLogoPanel'
 import {
   useQRType,
+  useQRData,
   useQRSize,
   useQRColor,
   useQRBackgroundColor,
@@ -29,6 +39,7 @@ import {
   useQRCornerDotStyle,
   useQRCornerDotColor,
   useSetQRType,
+  useSetQRData,
   useSetQRSize,
   useSetQRColor,
   useSetQRBackgroundColor,
@@ -89,8 +100,12 @@ export const QRControlPanel = memo(function QRControlPanel() {
   const tControls = useTranslations('qrGenerator.controls')
   const tDotStyles = useTranslations('qrGenerator.dotStyles')
   const tCornerStyles = useTranslations('qrGenerator.cornerStyles')
+  const tConfirm = useTranslations('qrGenerator.confirmTypeChange')
+
+  const baseId = useId()
 
   const type = useQRType()
+  const data = useQRData()
   const size = useQRSize()
   const color = useQRColor()
   const backgroundColor = useQRBackgroundColor()
@@ -104,6 +119,7 @@ export const QRControlPanel = memo(function QRControlPanel() {
   const cornerDotColor = useQRCornerDotColor()
 
   const setType = useSetQRType()
+  const setData = useSetQRData()
   const setSize = useSetQRSize()
   const setColor = useSetQRColor()
   const setBackgroundColor = useSetQRBackgroundColor()
@@ -116,47 +132,138 @@ export const QRControlPanel = memo(function QRControlPanel() {
   const setCornerDotStyle = useSetQRCornerDotStyle()
   const setCornerDotColor = useSetQRCornerDotColor()
 
+  // State for type change confirmation dialog
+  const [showTypeChangeDialog, setShowTypeChangeDialog] = useState(false)
+  const [pendingType, setPendingType] = useState<QRType | null>(null)
+
+  // Handle type change with confirmation if data exists
+  const handleTypeChange = useCallback(
+    (newType: QRType) => {
+      if (newType === type) return
+
+      // If there's data, show confirmation dialog
+      if (data && data.trim() !== '') {
+        setPendingType(newType)
+        setShowTypeChangeDialog(true)
+      } else {
+        setType(newType)
+      }
+    },
+    [type, data, setType]
+  )
+
+  // Confirm type change
+  const confirmTypeChange = useCallback(() => {
+    if (pendingType) {
+      setData('') // Clear data
+      setType(pendingType)
+    }
+    setShowTypeChangeDialog(false)
+    setPendingType(null)
+  }, [pendingType, setType, setData])
+
+  // Cancel type change
+  const cancelTypeChange = useCallback(() => {
+    setShowTypeChangeDialog(false)
+    setPendingType(null)
+  }, [])
+
+  // Handle slider value input changes
+  const handleSizeInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(e.target.value, 10)
+      if (!isNaN(value) && value >= 100 && value <= 500) {
+        setSize(value)
+      }
+    },
+    [setSize]
+  )
+
+  const handleMarginInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(e.target.value, 10)
+      if (!isNaN(value) && value >= 0 && value <= 50) {
+        setMargin(value)
+      }
+    },
+    [setMargin]
+  )
+
+  const sizeId = `${baseId}-size`
+  const marginId = `${baseId}-margin`
+
   return (
-    <Tabs defaultValue="basic" className="w-full">
-      <TabsList className="w-full grid grid-cols-4">
-        <TabsTrigger value="basic">{tControls('tabs.basic')}</TabsTrigger>
-        <TabsTrigger value="style">{tControls('tabs.style')}</TabsTrigger>
-        <TabsTrigger value="corners">{tControls('tabs.corners')}</TabsTrigger>
-        <TabsTrigger value="logo">{tControls('tabs.logo')}</TabsTrigger>
-      </TabsList>
+    <>
+      {/* Type Change Confirmation Dialog */}
+      <Dialog open={showTypeChangeDialog} onOpenChange={setShowTypeChangeDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{tConfirm('title')}</DialogTitle>
+            <DialogDescription>{tConfirm('description')}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={cancelTypeChange}>
+              {tConfirm('cancel')}
+            </Button>
+            <Button onClick={confirmTypeChange}>{tConfirm('confirm')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      <TabsContent value="basic" className="space-y-4 mt-4">
-        {/* Type */}
-        <div className="space-y-2">
-          <Label>{tControls('type')}</Label>
-          <Select value={type} onValueChange={(v) => setType(v as QRType)}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {qrTypes.map((qt) => (
-                <SelectItem key={qt.value} value={qt.value}>
-                  {t(`types.${qt.labelKey}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <Tabs defaultValue="basic" className="w-full">
+        <TabsList className="w-full grid grid-cols-4">
+          <TabsTrigger value="basic">{tControls('tabs.basic')}</TabsTrigger>
+          <TabsTrigger value="style">{tControls('tabs.style')}</TabsTrigger>
+          <TabsTrigger value="corners">{tControls('tabs.corners')}</TabsTrigger>
+          <TabsTrigger value="logo">{tControls('tabs.logo')}</TabsTrigger>
+        </TabsList>
 
-        {/* Size */}
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>{tControls('size')}</Label>
-            <span className="text-xs text-[var(--muted-foreground)]">{size}px</span>
+        <TabsContent value="basic" className="space-y-4 mt-4">
+          {/* Type */}
+          <div className="space-y-2">
+            <Label>{tControls('type')}</Label>
+            <Select value={type} onValueChange={handleTypeChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {qrTypes.map((qt) => (
+                  <SelectItem key={qt.value} value={qt.value}>
+                    {t(`types.${qt.labelKey}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Slider
-            value={[size]}
-            onValueChange={([v]) => setSize(v)}
-            min={100}
-            max={500}
-            step={10}
-          />
-        </div>
+
+          {/* Size */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <Label htmlFor={sizeId}>{tControls('size')}</Label>
+              <div className="flex items-center gap-1">
+                <Input
+                  id={sizeId}
+                  type="number"
+                  min={100}
+                  max={500}
+                  step={10}
+                  value={size}
+                  onChange={handleSizeInput}
+                  className="w-16 h-6 text-xs text-center px-1"
+                  aria-label={`${tControls('size')} value`}
+                />
+                <span className="text-xs text-[var(--muted-foreground)]">px</span>
+              </div>
+            </div>
+            <Slider
+              value={[size]}
+              onValueChange={([v]) => setSize(v)}
+              min={100}
+              max={500}
+              step={10}
+              aria-label={tControls('size')}
+            />
+          </div>
 
         {/* Color */}
         <div className="space-y-2">
@@ -226,9 +333,22 @@ export const QRControlPanel = memo(function QRControlPanel() {
 
         {/* Margin */}
         <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>{tControls('margin')}</Label>
-            <span className="text-xs text-[var(--muted-foreground)]">{margin}px</span>
+          <div className="flex justify-between items-center">
+            <Label htmlFor={marginId}>{tControls('margin')}</Label>
+            <div className="flex items-center gap-1">
+              <Input
+                id={marginId}
+                type="number"
+                min={0}
+                max={50}
+                step={5}
+                value={margin}
+                onChange={handleMarginInput}
+                className="w-14 h-6 text-xs text-center px-1"
+                aria-label={`${tControls('margin')} value`}
+              />
+              <span className="text-xs text-[var(--muted-foreground)]">px</span>
+            </div>
           </div>
           <Slider
             value={[margin]}
@@ -236,6 +356,7 @@ export const QRControlPanel = memo(function QRControlPanel() {
             min={0}
             max={50}
             step={5}
+            aria-label={tControls('margin')}
           />
         </div>
       </TabsContent>
@@ -340,8 +461,9 @@ export const QRControlPanel = memo(function QRControlPanel() {
       </TabsContent>
 
       <TabsContent value="logo" className="space-y-4 mt-4">
-        <QRLogoPanel />
-      </TabsContent>
-    </Tabs>
+          <QRLogoPanel />
+        </TabsContent>
+      </Tabs>
+    </>
   )
 })

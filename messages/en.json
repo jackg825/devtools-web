@@ -203,6 +203,68 @@
         "placeholder": "Enter text to copy..."
       }
     },
+    "validation": {
+      "required": "This field is required",
+      "wifi": {
+        "ssidRequired": "Network name is required",
+        "ssidTooLong": "Network name should not exceed 32 characters",
+        "wpaPasswordTooShort": "WPA password must be at least 8 characters",
+        "wpaPasswordTooLong": "WPA password must not exceed 63 characters",
+        "wepPasswordLength": "WEP key should be 5, 10, 13, or 26 characters"
+      },
+      "vcard": {
+        "nameRequired": "At least first name or last name is required",
+        "emailInvalid": "Invalid email format",
+        "phoneUnusual": "Phone number contains unusual characters",
+        "websiteInvalid": "Invalid website URL"
+      },
+      "event": {
+        "titleRequired": "Event title is required",
+        "startRequired": "Start date is required",
+        "startInvalid": "Invalid start date",
+        "endInvalid": "Invalid end date",
+        "endBeforeStart": "End date must be after start date",
+        "descriptionLong": "Long description may result in a dense QR code"
+      },
+      "geo": {
+        "latitudeRequired": "Latitude is required",
+        "latitudeInvalid": "Latitude must be a number between -90 and 90",
+        "longitudeRequired": "Longitude is required",
+        "longitudeInvalid": "Longitude must be a number between -180 and 180"
+      },
+      "crypto": {
+        "addressRequired": "Wallet address is required",
+        "addressFormat": "Wallet address format may be invalid",
+        "amountInvalid": "Amount must be a positive number"
+      },
+      "twqr": {
+        "bankCodeRequired": "Bank code is required",
+        "bankCodeFormat": "Bank code must be 3 digits",
+        "accountRequired": "Account number is required",
+        "accountDigitsOnly": "Account number must contain only digits",
+        "accountTooLong": "Account number must not exceed 16 digits",
+        "amountInvalid": "Amount must be a positive number",
+        "amountTooLarge": "Amount exceeds maximum allowed value"
+      },
+      "sms": {
+        "phoneRequired": "Phone number is required",
+        "phoneUnusual": "Phone number contains unusual characters",
+        "messageLong": "Message exceeds 160 characters"
+      },
+      "tel": {
+        "phoneRequired": "Phone number is required",
+        "phoneUnusual": "Phone number contains unusual characters"
+      },
+      "url": {
+        "required": "URL is required",
+        "invalid": "Invalid URL format"
+      },
+      "text": {
+        "required": "Text content is required",
+        "tooLong": "Text exceeds QR code capacity",
+        "long": "Long text may result in a dense QR code"
+      }
+    },
     "export": {
       "format": "Format",
       "size": "Size",
@@ -215,6 +277,12 @@
       "copy": "Copy",
       "copied": "Copied!",
       "downloading": "Downloading..."
+    },
+    "confirmTypeChange": {
+      "title": "Change QR Type?",
+      "description": "Switching QR type will clear your current input data. Do you want to continue?",
+      "cancel": "Cancel",
+      "confirm": "Continue"
     }
   },
   "imageTools": {

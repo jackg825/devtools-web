@@ -312,7 +312,18 @@ body {
   background-size: 24px 24px;
 }
 
-/* Reduced motion preference */
+/* Spinner animation - must be defined explicitly for Tailwind CSS v4 */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Reduced motion preference - exclude essential UI feedback animations */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -320,6 +331,11 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* Preserve spinner animation as essential UI feedback */
+  .animate-spin {
+    animation: spin 1s linear infinite !important;
   }
 }
 

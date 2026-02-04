@@ -203,6 +203,68 @@
         "placeholder": "輸入要複製的內容..."
       }
     },
+    "validation": {
+      "required": "此欄位為必填",
+      "wifi": {
+        "ssidRequired": "請輸入網路名稱",
+        "ssidTooLong": "網路名稱不應超過 32 個字元",
+        "wpaPasswordTooShort": "WPA 密碼至少需要 8 個字元",
+        "wpaPasswordTooLong": "WPA 密碼不可超過 63 個字元",
+        "wepPasswordLength": "WEP 密鑰應為 5、10、13 或 26 個字元"
+      },
+      "vcard": {
+        "nameRequired": "請至少輸入名字或姓氏",
+        "emailInvalid": "Email 格式不正確",
+        "phoneUnusual": "電話號碼包含不常見的字元",
+        "websiteInvalid": "網站網址格式不正確"
+      },
+      "event": {
+        "titleRequired": "請輸入活動名稱",
+        "startRequired": "請輸入開始日期",
+        "startInvalid": "開始日期格式不正確",
+        "endInvalid": "結束日期格式不正確",
+        "endBeforeStart": "結束日期必須在開始日期之後",
+        "descriptionLong": "描述過長可能導致 QR Code 較密集"
+      },
+      "geo": {
+        "latitudeRequired": "請輸入緯度",
+        "latitudeInvalid": "緯度必須是 -90 到 90 之間的數字",
+        "longitudeRequired": "請輸入經度",
+        "longitudeInvalid": "經度必須是 -180 到 180 之間的數字"
+      },
+      "crypto": {
+        "addressRequired": "請輸入錢包地址",
+        "addressFormat": "錢包地址格式可能不正確",
+        "amountInvalid": "金額必須為正數"
+      },
+      "twqr": {
+        "bankCodeRequired": "請選擇銀行",
+        "bankCodeFormat": "銀行代碼必須為 3 位數字",
+        "accountRequired": "請輸入帳號",
+        "accountDigitsOnly": "帳號只能包含數字",
+        "accountTooLong": "帳號不可超過 16 位數",
+        "amountInvalid": "金額必須為正數",
+        "amountTooLarge": "金額超過允許的最大值"
+      },
+      "sms": {
+        "phoneRequired": "請輸入電話號碼",
+        "phoneUnusual": "電話號碼包含不常見的字元",
+        "messageLong": "訊息超過 160 個字元"
+      },
+      "tel": {
+        "phoneRequired": "請輸入電話號碼",
+        "phoneUnusual": "電話號碼包含不常見的字元"
+      },
+      "url": {
+        "required": "請輸入網址",
+        "invalid": "網址格式不正確"
+      },
+      "text": {
+        "required": "請輸入文字內容",
+        "tooLong": "文字超出 QR Code 容量上限",
+        "long": "文字較長可能導致 QR Code 較密集"
+      }
+    },
     "export": {
       "format": "格式",
       "size": "尺寸",
@@ -215,6 +277,12 @@
       "copy": "複製",
       "copied": "已複製!",
       "downloading": "下載中..."
+    },
+    "confirmTypeChange": {
+      "title": "變更 QR 類型？",
+      "description": "切換 QR 類型將清除目前輸入的資料。確定要繼續嗎？",
+      "cancel": "取消",
+      "confirm": "繼續"
     }
   },
   "imageTools": {

@@ -43,7 +43,7 @@ export const QRPreview = memo(function QRPreview(props: QRPreviewProps) {
   onDownloadSvg(downloadSvg)
 
   return (
-    <div className="relative flex items-center justify-center max-w-full">
+    <div className="relative inline-block">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface)]/80 z-10">
           <Loader2 className="w-8 h-8 animate-spin text-[var(--accent)]" />
@@ -56,7 +56,7 @@ export const QRPreview = memo(function QRPreview(props: QRPreviewProps) {
       )}
       <div
         ref={containerRef}
-        className="flex items-center justify-center aspect-square [&>canvas]:max-w-full [&>canvas]:max-h-[45vh] [&>canvas]:w-auto [&>canvas]:h-auto [&>svg]:max-w-full [&>svg]:max-h-[45vh] [&>svg]:w-auto [&>svg]:h-auto"
+        className="block leading-[0]"
       />
     </div>
   )

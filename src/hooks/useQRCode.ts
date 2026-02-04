@@ -7,9 +7,52 @@ import type {
   CornerSquareStyle,
   CornerDotStyle,
   ErrorCorrectionLevel,
+  QRType,
 } from '@/types/qr'
 
+// ============================================================================
+// Module-level caching for performance optimization
+// ============================================================================
+
+// Cache the QRCodeStyling module to avoid re-importing on every render
+let cachedQRModule: typeof import('qr-code-styling') | null = null
+
+async function getQRCodeStylingModule(): Promise<typeof import('qr-code-styling')> {
+  if (!cachedQRModule) {
+    cachedQRModule = await import('qr-code-styling')
+  }
+  return cachedQRModule
+}
+
+// Simple LRU cache for processed logos with borders
+const logoCache = new Map<string, string>()
+const LOGO_CACHE_MAX_SIZE = 20
+
+function getCacheKey(logoSrc: string, borderWidth: number, borderColor: string): string {
+  return `${logoSrc.substring(0, 100)}|${borderWidth}|${borderColor}`
+}
+
+function setLogoCache(key: string, value: string): void {
+  // Evict oldest entry if cache is full
+  if (logoCache.size >= LOGO_CACHE_MAX_SIZE) {
+    const firstKey = logoCache.keys().next().value
+    if (firstKey) logoCache.delete(firstKey)
+  }
+  logoCache.set(key, value)
+}
+
+// ============================================================================
+// Smart filename generation
+// ============================================================================
+
+function generateFilename(type?: QRType): string {
+  const date = new Date().toISOString().slice(0, 10)
+  const typeStr = type || 'qr'
+  return `qr-${typeStr}-${date}`
+}
+
 interface UseQRCodeOptions {
+  qrType?: QRType
   data: string
   size: number
   color: string
@@ -33,6 +76,9 @@ export type ExportSize = 256 | 512 | 1024 | 2048
 
 export const EXPORT_FORMATS: ExportFormat[] = ['png', 'jpeg', 'webp', 'svg']
 export const EXPORT_SIZES: ExportSize[] = [256, 512, 1024, 2048]
+
+// 預覽用固定尺寸，確保在各種螢幕上都能正常顯示且不會被 CSS 強制縮放
+const PREVIEW_SIZE = 300
 
 interface UseQRCodeResult {
   containerRef: React.RefObject<HTMLDivElement | null>
@@ -70,16 +116,53 @@ const cornerDotStyleMap: Record<CornerDotStyle, 'square' | 'dot'> = {
  * 2. 用邊框顏色填充該放大區域
  * 3. 在上方繪製原始大小的 logo
  * 這樣可以保持 logo 原本的形狀（圓形、方形或不規則形狀）
+ *
+ * @param logoSrc - Logo 圖片來源
+ * @param borderWidth - 邊框寬度
+ * @param borderColor - 邊框顏色
+ * @param signal - AbortSignal 用於取消操作
  */
 async function addBorderToLogo(
   logoSrc: string,
   borderWidth: number,
-  borderColor: string = '#ffffff'
+  borderColor: string = '#ffffff',
+  signal?: AbortSignal
 ): Promise<string> {
+  // Check cache first
+  const cacheKey = getCacheKey(logoSrc, borderWidth, borderColor)
+  const cached = logoCache.get(cacheKey)
+  if (cached) return cached
+
   return new Promise((resolve, reject) => {
+    // Check if already aborted
+    if (signal?.aborted) {
+      reject(new DOMException('Aborted', 'AbortError'))
+      return
+    }
+
     const img = new Image()
     img.crossOrigin = 'anonymous'
+
+    // Setup abort handler
+    const abortHandler = () => {
+      img.src = '' // Cancel image loading
+      reject(new DOMException('Aborted', 'AbortError'))
+    }
+    signal?.addEventListener('abort', abortHandler)
+
+    const cleanup = () => {
+      signal?.removeEventListener('abort', abortHandler)
+    }
+
     img.onload = () => {
+      cleanup()
+
+      // Check if aborted during load
+      if (signal?.aborted) {
+        reject(new DOMException('Aborted', 'AbortError'))
+        return
+      }
+
       // 使用較高的內部解析度來避免模糊
       // 確保最小處理尺寸為 1024px 以保持品質
       const minSize = 1024
@@ -115,9 +198,17 @@ async function addBorderToLogo(
       ctx.globalCompositeOperation = 'source-over'
       ctx.drawImage(img, border, border, scaledWidth, scaledHeight)
 
-      resolve(canvas.toDataURL('image/png'))
+      const result = canvas.toDataURL('image/png')
+
+      // Cache the result
+      setLogoCache(cacheKey, result)
+
+      resolve(result)
     }
-    img.onerror = () => reject(new Error('Failed to load logo image'))
+    img.onerror = () => {
+      cleanup()
+      reject(new Error('Failed to load logo image'))
+    }
     img.src = logoSrc
   })
 }
@@ -129,21 +220,27 @@ export function useQRCode(options: UseQRCodeOptions): UseQRCodeResult {
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    let mounted = true
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
     const initQR = async () => {
       try {
         setIsLoading(true)
         setError(null)
 
-        const QRCodeStylingModule = await import('qr-code-styling')
+        // Use cached module
+        const QRCodeStylingModule = await getQRCodeStylingModule()
         const QRCodeStylingClass = QRCodeStylingModule.default
 
-        if (!mounted) return
+        // Check if aborted
+        if (signal.aborted) return
+
+        // 預覽使用固定尺寸，不受用戶選擇的導出尺寸影響
+        const previewSize = PREVIEW_SIZE
 
         const qrOptions: ConstructorParameters<typeof QRCodeStylingClass>[0] = {
-          width: options.size,
-          height: options.size,
+          width: previewSize,
+          height: previewSize,
           data: options.data || 'https://example.com',
           margin: options.margin,
           qrOptions: {
@@ -170,7 +267,7 @@ export function useQRCode(options: UseQRCodeOptions): UseQRCodeResult {
         if (options.logoImage) {
           const logoSizePercent = (options.logoSize || 40) / 100
           const logoMargin = options.logoMargin ?? 0
-          const desiredLogoPx = options.size * logoSizePercent
+          const desiredLogoPx = previewSize * logoSizePercent
 
           let finalLogoImage = options.logoImage
           let finalMargin = logoMargin
@@ -184,16 +281,21 @@ export function useQRCode(options: UseQRCodeOptions): UseQRCodeResult {
               finalLogoImage = await addBorderToLogo(
                 options.logoImage,
                 logoMargin,
-                borderColor
+                borderColor,
+                signal
               )
+              // Check if aborted during logo processing
+              if (signal.aborted) return
               finalMargin = 0 // Border is now built into the image
             } catch (e) {
+              // Ignore AbortError
+              if (e instanceof DOMException && e.name === 'AbortError') return
               console.error('Failed to process logo border:', e)
             }
           }
 
           // Compensate imageSize for margin
-          const compensatedImageSize = (desiredLogoPx + logoMargin * 2) / options.size
+          const compensatedImageSize = (desiredLogoPx + logoMargin * 2) / previewSize
 
           qrOptions.image = finalLogoImage
           qrOptions.imageOptions = {
@@ -217,7 +319,9 @@ export function useQRCode(options: UseQRCodeOptions): UseQRCodeResult {
 
         setIsLoading(false)
       } catch (err) {
-        if (mounted) {
+        // Ignore AbortError
+        if (err instanceof DOMException && err.name === 'AbortError') return
+        if (!signal.aborted) {
           setError(err instanceof Error ? err : new Error('Failed to generate QR code'))
           setIsLoading(false)
         }
@@ -227,11 +331,12 @@ export function useQRCode(options: UseQRCodeOptions): UseQRCodeResult {
     initQR()
 
     return () => {
-      mounted = false
+      abortController.abort()
     }
   }, [
     options.data,
-    options.size,
+    // 注意：options.size 不在依賴陣列中，因為預覽使用固定的 PREVIEW_SIZE
+    // options.size 只用於導出時的尺寸
     options.color,
     options.backgroundColor,
     options.transparentBackground,
@@ -250,16 +355,23 @@ export function useQRCode(options: UseQRCodeOptions): UseQRCodeResult {
 
   // Store current options for download with custom size
   const optionsRef = useRef(options)
-  optionsRef.current = options
+
+  useEffect(() => {
+    optionsRef.current = options
+  })
 
   const download = useCallback(async (
     format: ExportFormat,
     size: ExportSize,
-    filename = 'qr-code'
+    filename?: string
   ) => {
     const opts = optionsRef.current
-    const QRCodeStylingModule = await import('qr-code-styling')
+    // Use cached module
+    const QRCodeStylingModule = await getQRCodeStylingModule()
     const QRCodeStylingClass = QRCodeStylingModule.default
+
+    // Generate smart filename if not provided
+    const finalFilename = filename || generateFilename(opts.qrType)
 
     const qrOptions: ConstructorParameters<typeof QRCodeStylingClass>[0] = {
       width: size,
@@ -324,7 +436,7 @@ export function useQRCode(options: UseQRCodeOptions): UseQRCodeResult {
 
     const exportQR = new QRCodeStylingClass(qrOptions)
     await exportQR.download({
-      name: filename,
+      name: finalFilename,
       extension: format,
     })
   }, [])

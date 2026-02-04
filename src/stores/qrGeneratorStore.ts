@@ -3,6 +3,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useShallow } from 'zustand/shallow'
+import { useEffect } from 'react'
 import type {
   QRSettings,
   QRType,
@@ -15,6 +16,10 @@ import type {
 } from '@/types/qr'
 
 interface QRGeneratorStore extends QRSettings {
+  // Hydration state tracking
+  _hasHydrated: boolean
+  setHasHydrated: (state: boolean) => void
+  // Actions
   setType: (type: QRType) => void
   setData: (data: string) => void
   setSize: (size: number) => void
@@ -63,6 +68,10 @@ export const useQRGeneratorStore = create<QRGeneratorStore>()(
   persist(
     (set) => ({
       ...defaultSettings,
+      // Hydration tracking
+      _hasHydrated: false,
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
+      // Actions
       setType: (type) => set({
         type,
         data: '',
@@ -97,6 +106,7 @@ export const useQRGeneratorStore = create<QRGeneratorStore>()(
       name: 'devtools-qr-generator',
       skipHydration: true,
       partialize: (state) => ({
+        // Style settings
         size: state.size,
         color: state.color,
         backgroundColor: state.backgroundColor,
@@ -108,9 +118,16 @@ export const useQRGeneratorStore = create<QRGeneratorStore>()(
         cornerSquareColor: state.cornerSquareColor,
         cornerDotStyle: state.cornerDotStyle,
         cornerDotColor: state.cornerDotColor,
+        // Logo settings - now persisted
+        logoMode: state.logoMode,
+        logoImage: state.logoImage,
         logoSize: state.logoSize,
         logoMargin: state.logoMargin,
+        selectedSocialIcon: state.selectedSocialIcon,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
     }
   )
 )
@@ -161,6 +178,7 @@ export const useSetQRSelectedSocialIcon = () => useQRGeneratorStore((s) => s.set
 export const useQRPreviewSettings = () =>
   useQRGeneratorStore(
     useShallow((s) => ({
+      qrType: s.type,
       data: s.data,
       size: s.size,
       color: s.color,
@@ -181,3 +199,21 @@ export const useQRPreviewSettings = () =>
       selectedSocialIcon: s.selectedSocialIcon,
     }))
   )
+
+// Hydration hook - use to wait for store to be hydrated before rendering
+export const useQRStoreHydrated = () => useQRGeneratorStore((s) => s._hasHydrated)
+
+// Hook to safely use store after hydration
+// This triggers rehydration and returns whether the store is ready
+export function useQRStoreReady(): boolean {
+  const hasHydrated = useQRGeneratorStore((s) => s._hasHydrated)
+
+  useEffect(() => {
+    // Trigger rehydration if not already done
+    if (!useQRGeneratorStore.getState()._hasHydrated) {
+      useQRGeneratorStore.persist.rehydrate()
+    }
+  }, [])
+
+  return hasHydrated
+}
